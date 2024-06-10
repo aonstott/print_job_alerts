@@ -1,12 +1,15 @@
 import tkinter as tk
 from tkinter import filedialog
 import subprocess
+import os
 
 def run_script():
     filename = file_entry.get()
     if filename:
         try:
-            subprocess.run(["python3", "main.py", filename], check=True)
+            abs_path = os.path.abspath(filename)
+            main_path = os.path.join(os.path.dirname(__file__), "main.py")
+            subprocess.run(["python3", main_path, filename], check=True)
         except subprocess.CalledProcessError as e:
             result_text.set("Error: {}".format(e))
     else:

@@ -1,9 +1,11 @@
 from JobGroup import JobGroup
+import os
 
 #open the file
 class AddressReader:
     def read_email_addresses(self, groups):
-        with open('group_leaders.cfg') as file:
+        group_leaders_path = os.path.join(os.path.dirname(__file__), "group_leaders.cfg")
+        with open(group_leaders_path) as file:
             for line in file:
                 (name, email) = line.split(":")
                 #remove leading and trailing whitespace from key and value
@@ -16,7 +18,8 @@ class AddressReader:
     
     def read_job_groups(self):
         groups = []
-        with open('groups.cfg') as file:
+        groups_path = os.path.join(os.path.dirname(__file__), "groups.cfg")
+        with open(groups_path) as file:
             for line in file:
                 if self.is_new_group(line):
                     group_name = line.split(":")[1].strip()

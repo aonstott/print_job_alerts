@@ -1,15 +1,15 @@
 import sys
+from Emailer import Emailer
 
-def process_file(filename):
+
+def run(filename):
     try:
-        with open(filename, 'r') as file:
-            contents = file.read()
-            print("File contents:")
-            print(contents)
-    except FileNotFoundError:
-        print("File not found:", filename)
+        emailer = Emailer(filename)
+        emailer.assemble_excel_files()
     except Exception as e:
-        print("Error:", e)
+        print(f"Error: {e}")
+        sys.exit(1)
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -17,6 +17,6 @@ if __name__ == "__main__":
         sys.exit(1)
     
     filename = sys.argv[1]
-    process_file(filename)
+    run(filename)
 
 

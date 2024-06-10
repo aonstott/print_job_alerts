@@ -2,6 +2,8 @@ import smtplib
 import datetime
 from address_reader import AddressReader
 import pandas as pd
+import openpyxl
+import os
 
 
 '''
@@ -36,9 +38,26 @@ class Emailer:
 
     def create_excel(self, data, group_name):
         df = pd.DataFrame(data)
-        writer = pd.ExcelWriter(f'{group_name} {datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.xlsx')
+        excel_folder_path = os.path.join(os.path.dirname(__file__), "excel")
+        filename = f'{excel_folder_path}/{group_name} {datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.xlsx'
+        writer = pd.ExcelWriter(filename)
         df.to_excel(writer, index=False)
         writer._save()
+
+        wb = openpyxl.load_workbook(filename)
+        sheet = wb.active
+        sheet.column_dimensions['B'].width = 40
+        sheet.column_dimensions['C'].width = 25
+        sheet.column_dimensions['D'].width = 25
+        sheet.column_dimensions['E'].width = 30
+        sheet.column_dimensions['F'].width = 30
+        sheet.column_dimensions['G'].width = 30
+        sheet.column_dimensions['H'].width = 15
+
+        wb.save(filename)
+
+        
+
 
 
 
@@ -46,6 +65,6 @@ class Emailer:
 
 
 #TEST#
-emailer = Emailer("Excel Data.xlsx")
+#emailer = Emailer("Excel Data.xlsx")
 
-emailer.assemble_excel_files()
+#emailer.assemble_excel_files()
