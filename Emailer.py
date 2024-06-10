@@ -38,8 +38,16 @@ class Emailer:
 
     def create_excel(self, data, group_name):
         df = pd.DataFrame(data)
-        excel_folder_path = os.path.join(os.path.dirname(__file__), "excel")
-        filename = f'{excel_folder_path}/{group_name} {datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.xlsx'
+        #excel_folder_path = os.path.join(os.path.dirname(__file__), "excel")
+        downloads_folder = os.path.join(os.path.expanduser('~'), 'Downloads')
+        folder_name = f'job_alert_test_files {datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}'
+
+        if not os.path.exists(f'{downloads_folder}/{folder_name}'):
+            os.makedirs(f'{downloads_folder}/{folder_name}')
+        
+
+
+        filename = f'{downloads_folder}/{folder_name}/{group_name} {datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.xlsx'
         writer = pd.ExcelWriter(filename)
         df.to_excel(writer, index=False)
         writer._save()
