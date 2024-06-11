@@ -24,7 +24,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='gui',
+    name='Print Job Alerts',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

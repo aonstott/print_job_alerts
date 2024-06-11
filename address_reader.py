@@ -4,7 +4,7 @@ import os
 #open the file
 class AddressReader:
     def read_email_addresses(self, groups):
-        group_leaders_path = os.path.join(os.path.dirname(__file__), "group_leaders.cfg")
+        group_leaders_path = os.path.join(os.path.dirname(__file__), "group_leaders_test.cfg")
         with open(group_leaders_path) as file:
             for line in file:
                 (name, email) = line.split(":")

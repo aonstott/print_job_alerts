@@ -3,6 +3,8 @@ class JobGroup:
         self.name = name
         self.jobs = jobs
         self.email = email
+        self.file = None
+
     
     def add_job(self, job):
         self.jobs.append(job)

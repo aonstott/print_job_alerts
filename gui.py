@@ -31,7 +31,7 @@ file_button = tk.Button(root, text="Select File", command=lambda: file_entry.ins
 file_button.grid(row=0, column=2, padx=5, pady=5)
 
 # Create a button to run the script
-run_button = tk.Button(root, text="Run Script", command=run_script)
+run_button = tk.Button(root, text="Test", command=run_script)
 run_button.grid(row=1, column=1, padx=5, pady=5)
 
 # Create a label to display the result
