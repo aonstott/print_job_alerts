@@ -24,7 +24,11 @@ class Emailer:
         self.support_address = "pmcompsupport@byu.edu"
         self.input_file = input_file
 
-    def assemble_excel_files(self, is_test=False):
+    def assemble_excel_files(self, send_emails):
+        send = False
+        print(send_emails)
+        if send_emails == "send_emails":
+            send = True
         excel_data = {}
         found = False
         df = pd.read_excel(self.input_file)
@@ -54,8 +58,11 @@ class Emailer:
             else:
                 num_jobs = len(excel_data[group.name])
                 group.file = self.create_excel(excel_data[group.name], group.name)
-                self.send_email(group, group.file, num_jobs)
-                print(f"Excel file created for {group.name} with {num_jobs} jobs. Saved in Downloads folder. Email sent to {group.email}.")
+                if send:
+                    self.send_email(group, group.file, num_jobs)
+                    print(f"Excel file created for {group.name} with {num_jobs} jobs. Saved in Downloads folder. Email sent to {group.email}.")
+                else:
+                    print(f"Excel file created for {group.name} with {num_jobs} jobs. Test File Saved in Downloads folder.")
 
 
 
