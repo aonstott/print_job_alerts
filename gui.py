@@ -1,7 +1,16 @@
 import tkinter as tk
+from tkinter import ttk
 from tkinter import filedialog
 import subprocess
 import os
+save_files = "yes"
+
+def on_checkbox_toggle():
+    global save_files
+    if checkbox_var.get():
+        save_files = "yes"
+    else:
+        save_files = "no"
 
 def run_script(send_emails):
     filename = file_entry.get()
@@ -9,7 +18,7 @@ def run_script(send_emails):
         try:
             abs_path = os.path.abspath(filename)
             main_path = os.path.join(os.path.dirname(__file__), "main.py")
-            subprocess.run(["python3", main_path, filename, send_emails], check=True)
+            subprocess.run(["python3", main_path, filename, send_emails, save_files], check=True)
         except subprocess.CalledProcessError as e:
             result_text.set("Error: {}".format(e))
     else:
@@ -42,6 +51,10 @@ send_button.grid(row=2, column=1, padx=5, pady=5)
 result_text = tk.StringVar()
 result_label = tk.Label(root, textvariable=result_text, fg="blue")
 result_label.grid(row=3, column=1, padx=5, pady=5)
+
+checkbox_var = tk.BooleanVar()
+checkbox = ttk.Checkbutton(root, text="Save Files", variable=checkbox_var, command=on_checkbox_toggle)
+checkbox.grid(row=0, column=0, padx=10, pady=10)
 
 # Start the GUI main loop
 root.mainloop()

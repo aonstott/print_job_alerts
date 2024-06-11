@@ -8,6 +8,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
+from time import sleep
 
 
 '''
@@ -24,8 +25,11 @@ class Emailer:
         self.support_address = "pmcompsupport@byu.edu"
         self.input_file = input_file
 
-    def assemble_excel_files(self, send_emails):
+    def assemble_excel_files(self, send_emails, save_files="yes"):
         send = False
+        save = True
+        if save_files == "no":
+            save = False
         print(send_emails)
         if send_emails == "send_emails":
             send = True
@@ -47,10 +51,6 @@ class Emailer:
                 print(f"No group found for {row['Next Task']}")
             found = False
 
-        #for group in excel_data:
-            #self.create_excel(excel_data[group], group)
-
-            #print(f"Excel file created for {group} with {len(excel_data[group])} jobs. Saved in Downloads folder.")
         
         for group in self.groups:
             if group.name not in excel_data:
@@ -63,6 +63,21 @@ class Emailer:
                     print(f"Excel file created for {group.name} with {num_jobs} jobs. Saved in Downloads folder. Email sent to {group.email}.")
                 else:
                     print(f"Excel file created for {group.name} with {num_jobs} jobs. Test File Saved in Downloads folder.")
+
+        sleep(1)
+
+        if not save:
+            folder_name = group.file.split('/')[-2]
+            #remove folder contents
+            for group in self.groups:
+                if group.file:
+                    if group.name == "Brett Hodge":
+                        continue
+                    print(group.file)
+                    os.remove(group.file)
+
+            os.rmdir(f'{os.path.expanduser("~")}/Downloads/{folder_name}')
+            print(f"Test files deleted.")
 
 
 
@@ -92,8 +107,13 @@ class Emailer:
         sheet.column_dimensions['F'].width = 30
         sheet.column_dimensions['G'].width = 30
         sheet.column_dimensions['H'].width = 15
+        
 
         wb.save(path_name)
+
+        wb.close()
+        writer.close()
+        print(f"File Closed: {path_name}")
         return path_name
 
     def send_email(self, group, filename, num_jobs):
