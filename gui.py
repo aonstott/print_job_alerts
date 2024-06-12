@@ -1,9 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
+from tkinter import PhotoImage
 import subprocess
 import os
-save_files = "yes"
+
+save_files = "no"
 
 def on_checkbox_toggle():
     global save_files
@@ -26,8 +28,10 @@ def run_script(send_emails):
 
 # Create the main window
 root = tk.Tk()
-root.title("Email Alerts for Unfinished Jobs")
+root.title("PM Email Alerts")
 
+icon = PhotoImage(file="appicon.png")
+root.iconphoto(True, icon)
 # Create a label and entry for the filename
 file_label = tk.Label(root, text="Filename:")
 file_label.grid(row=0, column=0, padx=5, pady=5)
@@ -40,7 +44,7 @@ file_button = tk.Button(root, text="Select File", command=lambda: file_entry.ins
 file_button.grid(row=0, column=2, padx=5, pady=5)
 
 # Create a button to run the script
-run_button = tk.Button(root, text="Test", command=lambda: run_script("test"))
+run_button = tk.Button(root, text="Download Files", command=lambda: run_script("test"))
 run_button.grid(row=1, column=1, padx=5, pady=5)
 
 # Create a button to send the emails

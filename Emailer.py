@@ -25,14 +25,14 @@ class Emailer:
         self.support_address = "pmcompsupport@byu.edu"
         self.input_file = input_file
 
-    def assemble_excel_files(self, send_emails, save_files="yes"):
+    def assemble_excel_files(self, send_emails, save_files):
         send = False
         save = True
         if save_files == "no":
             save = False
-        print(send_emails)
         if send_emails == "send_emails":
             send = True
+        
         excel_data = {}
         found = False
         df = pd.read_excel(self.input_file)
@@ -57,46 +57,47 @@ class Emailer:
                 print(f"No jobs found for {group.name}. No Excel file created.")
             else:
                 num_jobs = len(excel_data[group.name])
-                group.file = self.create_excel(excel_data[group.name], group.name)
+                group.file = self.create_excel(excel_data[group.name], group.name, save_files)
                 if send:
                     self.send_email(group, group.file, num_jobs)
-                    print(f"Excel file created for {group.name} with {num_jobs} jobs. Saved in Downloads folder. Email sent to {group.email}.")
+                    if save:
+                        print(f"Excel file created for {group.name} with {num_jobs} jobs. Saved in Downloads folder. Email sent to {group.email}.")
+                    else:
+                        print(f"Excel file created for {group.name} with {num_jobs} jobs. Email sent to {group.email}.")
                 else:
-                    print(f"Excel file created for {group.name} with {num_jobs} jobs. Test File Saved in Downloads folder.")
-
-        sleep(1)
+                    if save:
+                        print(f"Excel file created for {group.name} with {num_jobs} jobs. Test File Saved in Downloads folder.")
+                    else:
+                        print(f"Test run for {group.name} with {num_jobs} jobs. Nothing saved.")
 
         if not save:
-            folder_name = group.file.split('/')[-2]
-            #remove folder contents
-            for group in self.groups:
-                if group.file:
-                    if group.name == "Brett Hodge":
-                        continue
-                    print(group.file)
-                    os.remove(group.file)
-
-            os.rmdir(f'{os.path.expanduser("~")}/Downloads/{folder_name}')
-            print(f"Test files deleted.")
+            self.clear_excel_folder()
 
 
 
 
-    def create_excel(self, data, group_name):
+    def create_excel(self, data, group_name, save_files):
+        save = True
+        if save_files == "no":
+            save = False
         df = pd.DataFrame(data)
-        #excel_folder_path = os.path.join(os.path.dirname(__file__), "excel")
-        downloads_folder = os.path.join(os.path.expanduser('~'), 'Downloads')
-        folder_name = f'job_alert_test_files {datetime.datetime.now().strftime("%Y-%m-%d %H-%M")}'
-
-        if not os.path.exists(f'{downloads_folder}/{folder_name}'):
-            os.makedirs(f'{downloads_folder}/{folder_name}')
         
+        if save:
+            downloads_folder = os.path.join(os.path.expanduser('~'), 'Downloads')
+            folder_name = f'job_alert_test_files {datetime.datetime.now().strftime("%Y-%m-%d %H-%M")}'
 
-        file_name = f'{group_name} {datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.xlsx'
-        path_name = f'{downloads_folder}/{folder_name}/{file_name}'
-        writer = pd.ExcelWriter(path_name)
-        df.to_excel(writer, index=False)
-        writer._save()
+            if not os.path.exists(f'{downloads_folder}/{folder_name}'):
+                os.makedirs(f'{downloads_folder}/{folder_name}')
+            
+
+            file_name = f'{group_name} {datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.xlsx'
+            path_name = f'{downloads_folder}/{folder_name}/{file_name}'
+
+        else:
+            excel_folder_path = os.path.join(os.path.dirname(__file__), "excel")
+            path_name = f'{excel_folder_path}/{group_name} {datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.xlsx'
+
+        df.to_excel(path_name, index=False)
 
         wb = openpyxl.load_workbook(path_name)
         sheet = wb.active
@@ -110,11 +111,23 @@ class Emailer:
         
 
         wb.save(path_name)
-
         wb.close()
-        writer.close()
-        print(f"File Closed: {path_name}")
         return path_name
+    
+    def clear_excel_folder(self):
+        #clear excel folder
+        excel_folder = os.path.join(os.path.dirname(__file__), "excel")
+        for file in os.listdir(excel_folder):
+            #This is a super weird bug I can't figure out but it shouldn't hurt anything
+            if file.startswith("Brett Hodge"):
+                continue
+            file_path = os.path.join(excel_folder, file)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+            except Exception as e:
+                print(e)
+    
 
     def send_email(self, group, filename, num_jobs):
         server = smtplib.SMTP('128.187.16.31', 25)
@@ -122,8 +135,9 @@ class Emailer:
         msg = MIMEMultipart()
         msg['From'] = self.from_address
         msg['To'] = group.email
-        msg['Subject'] = f"Print and Mail Job Alert: {group.name} ({num_jobs} Unfinished Jobs)"
-        body = f"""Hello {group.name},\n\nYou have {num_jobs} unfinished jobs in your area. 
+        msg['Subject'] = f"{num_jobs} Unfinished Jobs in Your Area"
+        first_name = group.name.split()[0]
+        body = f"""Hello {first_name},\n\nYou currently have {num_jobs} unfinished jobs in your area. 
 Please see the attached Excel file for more information.\n\n\n This message was generated automatically.  For any questions/problems, please contact Print and Mail IT at {self.support_address}"""
         msg.attach(MIMEText(body, 'plain'))
 
@@ -137,18 +151,3 @@ Please see the attached Excel file for more information.\n\n\n This message was 
         server.starttls()
         server.sendmail(self.from_address, group.email, msg.as_string())
 
-
-
-
-        
-
-
-
-
-
-
-
-#TEST#
-#emailer = Emailer("Excel Data.xlsx")
-
-#emailer.assemble_excel_files()
