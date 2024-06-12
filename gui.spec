@@ -7,7 +7,7 @@ a = Analysis(
     ['gui.py'],
     pathex=['C:\\Users\aonstott\Downloads\print_job_alerts'],
     binaries=[],
-    datas=[('main.py', '.'), ('Emailer.py', '.'), ('address_reader.py', '.'), ('email_addresses.cfg', '.'), ('group_leaders.cfg', '.'), ('group_leaders_test.cfg', '.'), ('groups.cfg', '.'), ('JobGroup.py', '.'), ('excel/*', 'excel')],
+    datas=[('main.py', '.'), ('help.html', '.'), ('style.css', '.'), ('Emailer.py', '.'), ('address_reader.py', '.'), ('email_addresses.cfg', '.'), ('group_leaders.cfg', '.'), ('appicon.png', '.'), ('group_leaders_test.cfg', '.'), ('groups.cfg', '.'), ('JobGroup.py', '.'), ('excel/*', 'excel')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

@@ -4,6 +4,8 @@ from tkinter import filedialog
 from tkinter import PhotoImage
 import subprocess
 import os
+import time
+import webbrowser
 
 save_files = "no"
 
@@ -15,22 +17,28 @@ def on_checkbox_toggle():
         save_files = "no"
 
 def run_script(send_emails):
+    start_time = time.time()
     filename = file_entry.get()
     if filename:
         try:
             abs_path = os.path.abspath(filename)
             main_path = os.path.join(os.path.dirname(__file__), "main.py")
             subprocess.run(["python3", main_path, filename, send_emails, save_files], check=True)
+            result_text.set("Completed in {:.2f} seconds".format(time.time() - start_time))
         except subprocess.CalledProcessError as e:
             result_text.set("Error: {}".format(e))
     else:
         result_text.set("Please select a file")
 
+def open_help():
+    help_path = os.path.join(os.path.dirname(__file__), "help.html")
+    webbrowser.open(help_path)
+
 # Create the main window
 root = tk.Tk()
 root.title("PM Email Alerts")
-
-icon = PhotoImage(file="appicon.png")
+icon_path = os.path.join(os.path.dirname(__file__), "appicon.png")
+icon = PhotoImage(file=icon_path)
 root.iconphoto(True, icon)
 # Create a label and entry for the filename
 file_label = tk.Label(root, text="Filename:")
@@ -50,6 +58,9 @@ run_button.grid(row=1, column=1, padx=5, pady=5)
 # Create a button to send the emails
 send_button = tk.Button(root, text="Send Emails", command=lambda: run_script("send_emails"))
 send_button.grid(row=2, column=1, padx=5, pady=5)
+
+open_button = tk.Button(root, text="Help", command=open_help)
+open_button.grid(row=3, column=0, padx=5, pady=5)
 
 # Create a label to display the result
 result_text = tk.StringVar()
