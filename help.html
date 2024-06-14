@@ -20,16 +20,34 @@
         <h2>Current Configuration</h2>
         <h3>Group Leaders</h3>
         <p id="group=leaders">
-            Kami Sanderson: ksandy22@byu.edu<br>
+            Kami Sanderson: ksandy22@byu.edu <br>
             Drew Johnson: drew_johnson@byu.edu <br>
             Ben Bean: ben_bean@byu.edu <br>
             Ken Simmons: krs69@byu.edu <br>
             Brian Bates: brianlb3@byu.edu <br>
             Brian Baird: brian_baird@byu.edu <br>
             Brett Hodge: bhodge2@byu.edu <br>
+            Daunine Beck: dbeck@byu.edu <br>
+            Kurt Johnson: kurt_johnson@byu.edu <br>
             Print Lobby: printlobby@byu.edu <br>
         </p>
     </div>
+    <h2>How This Program Works</h2>
+    <p>This program uses an excel report of all unfinished jobs as its input.  It scans these jobs using a python script, and places them into a pandas dataframe.
+        From the dataframe, it scans jobs by next task to be completed.  The cfg files are used to create a list of jobs that fall under each group.  These files also
+        contain the email addresses of the group leaders.  The program then creates an excel file for each group, and attaches them to an email.  The email is sent to
+        each group leader with the excel file and the number of unfinished jobs.
+
+        The program was developed using python.  It was compiled into a windows executable using pyinstaller to make it simple to use for those who are not familiar with
+        python.  Running the program will open the gui and a terminal window.  The terminal window will show basic information about what the program is doing, along with any errors.
+        Any output labeled with "WARNING" indicates a problem with the program, and the developer should be contacted.
+        
+        
+        NOTE: It is very important that the column names in the excel report are consistent.  The program
+        will not work if the "Next Task" column is named something else.  In the case that the format is changed, please contact the developer to update the program.
+        The program was originally written by Aaron Onstott, but in the case that he is no longer in the department, one of the other CSRs or developers should be able to
+        help.
+    </p>
 </body>
 
 </html>

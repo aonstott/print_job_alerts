@@ -1,3 +1,10 @@
+'''
+class JobGroup:
+contains name of the group, list of tasks that fall into that group, email address of the group leader, and the filename of the excel sheet 
+containing the report for that group
+'''
+
+
 class JobGroup:
     def __init__(self, name, jobs, email):
         self.name = name

@@ -6,27 +6,26 @@ import subprocess
 import os
 import time
 import webbrowser
+from main import main_function
 
-save_files = "no"
+save_files = False
 
 def on_checkbox_toggle():
     global save_files
     if checkbox_var.get():
-        save_files = "yes"
+        save_files = True
     else:
-        save_files = "no"
+        save_files = False
 
 def run_script(send_emails):
     start_time = time.time()
     filename = file_entry.get()
     if filename:
         try:
-            abs_path = os.path.abspath(filename)
-            main_path = os.path.join(os.path.dirname(__file__), "main.py")
-            subprocess.run(["python3", main_path, filename, send_emails, save_files], check=True)
+            main_function(filename, send_emails, save_files)
             result_text.set("Completed in {:.2f} seconds".format(time.time() - start_time))
-        except subprocess.CalledProcessError as e:
-            result_text.set("Error: {}".format(e))
+        except Exception as e:
+            result_text.set(f"Error: {e}")
     else:
         result_text.set("Please select a file")
 
@@ -52,11 +51,11 @@ file_button = tk.Button(root, text="Select File", command=lambda: file_entry.ins
 file_button.grid(row=0, column=2, padx=5, pady=5)
 
 # Create a button to run the script
-run_button = tk.Button(root, text="Download Files", command=lambda: run_script("test"))
+run_button = tk.Button(root, text="Download Files", command=lambda: run_script(False))
 run_button.grid(row=1, column=1, padx=5, pady=5)
 
 # Create a button to send the emails
-send_button = tk.Button(root, text="Send Emails", command=lambda: run_script("send_emails"))
+send_button = tk.Button(root, text="Send Emails", command=lambda: run_script(True))
 send_button.grid(row=2, column=1, padx=5, pady=5)
 
 open_button = tk.Button(root, text="Help", command=open_help)

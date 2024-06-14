@@ -1,8 +1,15 @@
 import sys
 from Emailer import Emailer
 
+'''
+This program analyzes a spreadsheet of incomplete jobs in the Print and Mail department.
+It sends an email to whoever is responsible for the job, notifying them of all the incomplete jobs they are responsible for.
+For any questions/problems, please contact Print and Mail IT at pmcompsupport@byu.edu
+'''
 
-def run(filename, send_emails, save_files="yes"):
+
+#This method creates an emailer object and calls the assemble_excel_files method, which creates the excel files and sends the emails
+def run(filename, send_emails, save_files=True):
     try:
         emailer = Emailer(filename)
         emailer.assemble_excel_files(send_emails, save_files)
@@ -11,17 +18,7 @@ def run(filename, send_emails, save_files="yes"):
         sys.exit(1)
 
 
-if __name__ == "__main__":
-    if len(sys.argv) != 3 and len(sys.argv) != 2 and len(sys.argv) != 4:
-        print("Usage: python your_script.py filename send_emails")
-        sys.exit(1)
-    save_files = "yes"
-    filename = sys.argv[1]
-    if len(sys.argv) == 3:
-        send_emails = sys.argv[2]
-    elif len(sys.argv) == 4:
-        send_emails = sys.argv[2]
-        save_files = sys.argv[3]
+def main_function(filename, send_emails, save_files=True):
     run(filename, send_emails, save_files)
 
 
